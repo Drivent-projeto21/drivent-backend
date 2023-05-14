@@ -26,3 +26,16 @@ export async function getHotelsWithRooms(req: AuthenticatedRequest, res: Respons
     next(error);
   }
 }
+
+export async function getBookingsByHotelId(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+  const { hotelId } = req.params;
+
+  try {
+    const bookings = await hotelsService.getBookingsByHotelId(Number(hotelId));
+
+    return res.status(httpStatus.OK).send(bookings);
+  } catch (error) {
+    next(error);
+  }
+}

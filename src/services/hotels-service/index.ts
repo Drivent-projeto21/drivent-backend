@@ -1,4 +1,5 @@
 import hotelRepository from '@/repositories/hotel-repository';
+import roomRepository from '@/repositories/room-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import { notFoundError } from '@/errors';
 import ticketsRepository from '@/repositories/tickets-repository';
@@ -37,8 +38,19 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
   return hotel;
 }
 
+async function getBookingsByHotelId(hotelId: number) {
+
+  const bookings = await roomRepository.findAllByHotelId(hotelId)
+
+  if (!bookings) {
+    throw notFoundError();
+  }
+  return bookings;
+}
+
 export default {
   getHotels,
   getHotelsWithRooms,
+  getBookingsByHotelId,
   listHotels,
 };
