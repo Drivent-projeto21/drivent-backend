@@ -6,3 +6,4 @@ export * from './tickets-controller';
 export * from './payments-controller';
 export * from './booking-controller';
 export * from './activity-controller';
+export * from './subscription-controller';

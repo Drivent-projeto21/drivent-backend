@@ -33,9 +33,17 @@ async function getVenues() {
   });
 }
 
+async function findById(activityId: number) {
+  return await prisma.activity.findUnique({
+    where: { id: activityId },
+    include: { Subscriptions: true },
+  });
+}
+
 const activityRepository = {
   getAllActivities,
   getVenues,
+  findById,
 };
 
 export default activityRepository;
