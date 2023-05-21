@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 const prisma = new PrismaClient();
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
+
 
 async function main() {
   let event = await prisma.event.findFirst();
@@ -15,8 +18,6 @@ async function main() {
       },
     });
   }
-
-  console.log({ event });
 
   await prisma.ticketType.deleteMany();
   await prisma.ticketType.createMany({ data: ticketTypes });
@@ -34,6 +35,46 @@ async function main() {
     {name: '102', capacity: 3, hotelId: createdHotels[1].id},
   ];
   await prisma.room.createMany({ data: rooms });
+
+  await prisma.venue.deleteMany();
+  await prisma.venue.createMany({data: venues});
+  const createdVenues = await prisma.venue.findMany({ orderBy: {id: 'asc'}});
+
+  await prisma.activity.deleteMany({});
+  await prisma.activity.createMany({
+    data: [
+      {name: 'Minecraft: montando o PC ideal', vacancies: 25, venueId: createdVenues[0].id, 
+      startsAt: dayjs().add(1, 'day').hour(9).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(1, 'day').hour(10).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'LoL: montando o PC ideal', vacancies: 0, venueId: createdVenues[0].id, 
+      startsAt: dayjs().add(1, 'day').hour(10).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(1, 'day').hour(11).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'Palestra: auditório lateral', vacancies: 25, venueId: createdVenues[1].id, 
+      startsAt: dayjs().add(1, 'day').hour(9).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(1, 'day').hour(11).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'Palestra x: workshop', vacancies: 25, venueId: createdVenues[2].id, 
+      startsAt: dayjs().add(2, 'day').hour(9).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(2, 'day').hour(10).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'Palestra y: workshop', vacancies: 25, venueId: createdVenues[2].id, 
+      startsAt: dayjs().add(2, 'day').hour(9).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(2, 'day').hour(10).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'Palestra dia 3: auditório princiapl', vacancies: 0, venueId: createdVenues[0].id, 
+      startsAt: dayjs().add(3, 'day').hour(14).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(3, 'day').hour(15).minute(0).second(0).millisecond(0).toDate()},
+
+      {name: 'Palestra dia 3: auditório lateral', vacancies: 3, venueId: createdVenues[1].id, 
+      startsAt: dayjs().add(3, 'day').hour(9).minute(0).second(0).millisecond(0).toDate(), 
+      endsAt: dayjs().add(3, 'day').hour(10).minute(30).second(0).millisecond(0).toDate()} 
+    ]
+  });
+
+
+  console.log({ event });
 }
 
 main()
@@ -76,3 +117,5 @@ main()
       image: 'https://sp-ao.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_871,h_581/https://blog.hotelpontaverde.com.br/wp-content/uploads/2019/09/Resort-ou-Hotel-Hotel-Ponta-Verde-France%CC%82s.png'
     },
   ];
+
+  const venues = [{name: 'Auditório Principal'}, {name: 'Auditório Lateral'}, {name: 'Sala de Workshop'}];
