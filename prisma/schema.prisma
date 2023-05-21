@@ -158,8 +158,8 @@ model Activity {
   name         String
   vacancies    Int
   venueId      Int
-  startsAt     DateTime
-  endsAt       DateTime
+  startsAt     DateTime       @db.Timestamptz
+  endsAt       DateTime       @db.Timestamptz
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Venue        Venue          @relation(fields: [venueId], references: [id], onDelete: Cascade)
