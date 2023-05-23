@@ -164,6 +164,8 @@ model Activity {
   updatedAt    DateTime       @updatedAt
   Venue        Venue          @relation(fields: [venueId], references: [id], onDelete: Cascade)
   Subscriptions Subscription[]
+
+  @@index([startsAt])
 }
 
 model Subscription {
