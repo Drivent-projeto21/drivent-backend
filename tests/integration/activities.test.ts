@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import faker from '@faker-js/faker';
 import { TicketStatus } from '@prisma/client';
 import { cleanDb, generateValidToken } from '../helpers';
-import { createEnrollmentWithAddress, createPayment, createTicket, createTicketTypeRemote, createUser, createActivity } from '../factories';
+import { createEnrollmentWithAddress, createPayment, createTicket, createTicketTypeRemote, createUser, createActivity, createTicketType, createTicketTypeWithHotel } from '../factories';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
@@ -90,11 +90,11 @@ describe('GET /activities', () => {
             expect(response.status).toBe(httpStatus.FORBIDDEN);
         })
 
-        /* it('should respond with status 200 and the list of activities', async () => {
+        it('should respond with status 200 and the list of activities', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
             const enrollment = await createEnrollmentWithAddress(user);
-            const ticketType = await createTicketTypeRemote();
+            const ticketType = await createTicketTypeWithHotel();
             const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
             const payment = await createPayment(ticket.id, ticketType.price);
 
@@ -104,7 +104,7 @@ describe('GET /activities', () => {
 
             expect(response.status).toBe(httpStatus.OK);
 
-        }) */
+        })
 
     })
 
