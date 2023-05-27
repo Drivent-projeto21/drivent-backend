@@ -1,4 +1,4 @@
-import { Address, Booking, Enrollment, Room, Ticket, TicketStatus, TicketType } from '@prisma/client';
+import { Address, Booking, Enrollment, Hotel, Room, Ticket, TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
 
 type CreateBookingParams = {
@@ -16,7 +16,11 @@ export function createBooking({ roomId, userId }: CreateBookingParams) {
 }
 
 export function getBookingReturn() {
-  const booking: Booking & { Room: Room } = {
+  const booking: Booking & {
+    Room: Room & {
+      Hotel: Hotel;
+    };
+  } = {
     id: 1,
     userId: 1,
     roomId: 1,
@@ -27,6 +31,13 @@ export function getBookingReturn() {
       name: 'Room 1',
       capacity: 2,
       hotelId: 1,
+      Hotel: {
+        id: 1,
+        name: 'Hotel 1',
+        image: 'Imagem Hotel 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -35,7 +46,11 @@ export function getBookingReturn() {
 }
 
 export function getBookingDifferentUserIdReturn() {
-  const booking: Booking & { Room: Room } = {
+  const booking: Booking & {
+    Room: Room & {
+      Hotel: Hotel;
+    };
+  } = {
     id: 1,
     userId: 2,
     roomId: 1,
@@ -46,6 +61,13 @@ export function getBookingDifferentUserIdReturn() {
       name: 'Room 1',
       capacity: 2,
       hotelId: 1,
+      Hotel: {
+        id: 1,
+        name: 'Hotel 1',
+        image: 'Imagem Hotel 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
       createdAt: new Date(),
       updatedAt: new Date(),
     },
