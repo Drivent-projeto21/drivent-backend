@@ -90,6 +90,22 @@ describe('GET /activities', () => {
             expect(response.status).toBe(httpStatus.FORBIDDEN);
         })
 
+        it('should respond with status 403 when the ticket user is remote', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+            const enrollment = await createEnrollmentWithAddress(user);
+            const ticketType = await createTicketTypeRemote();
+            const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+            const payment = await createPayment(ticket.id, ticketType.price);
+
+            const activity = await createActivity();
+
+            const response = await server.get('/activities').set('Authorization', `Bearer ${token}`);
+
+            expect(response.status).toBe(httpStatus.FORBIDDEN);
+
+        })
+
         it('should respond with status 200 and the list of activities', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
@@ -109,3 +125,4 @@ describe('GET /activities', () => {
     })
 
 })
+
