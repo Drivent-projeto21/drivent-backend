@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createEvent, createUser } from '../factories';
-import { cleanDb } from '../helpers';
+import { cleanDb, cleanRedis } from '../helpers';
 import { duplicatedEmailError } from '@/services/users-service';
 import { prisma } from '@/config';
 import app, { init } from '@/app';
@@ -11,6 +11,7 @@ import app, { init } from '@/app';
 beforeAll(async () => {
   await init();
   await cleanDb();
+  cleanRedis();
 });
 
 const server = supertest(app);
@@ -37,6 +38,7 @@ describe('POST /users', () => {
     });
 
     it('should respond with status 400 when there is no event', async () => {
+      cleanRedis();
       const body = generateValidBody();
 
       const response = await server.post('/users').send(body);
@@ -45,6 +47,7 @@ describe('POST /users', () => {
     });
 
     it('should respond with status 400 when current event did not started yet', async () => {
+      cleanRedis();
       const event = await createEvent({ startsAt: dayjs().add(1, 'day').toDate() });
       const body = generateValidBody();
 
@@ -57,6 +60,7 @@ describe('POST /users', () => {
       beforeAll(async () => {
         await prisma.event.deleteMany({});
         await createEvent();
+        cleanRedis();
       });
 
       it('should respond with status 409 when there is an user with given email', async () => {

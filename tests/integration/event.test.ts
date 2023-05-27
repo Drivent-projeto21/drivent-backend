@@ -1,12 +1,13 @@
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createEvent } from '../factories';
-import { cleanDb } from '../helpers';
+import { cleanDb, cleanRedis } from '../helpers';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
   await init();
   await cleanDb();
+  cleanRedis();
 });
 
 const server = supertest(app);
@@ -19,6 +20,7 @@ describe('GET /event', () => {
   });
 
   it('should respond with status 200 and event data if there is an event', async () => {
+    cleanRedis();
     const event = await createEvent();
 
     const response = await server.get('/event');
